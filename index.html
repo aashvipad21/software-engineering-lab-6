@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Library Management System — a client-side educational prototype for managing books, members, and borrowing records." />
+  <title>Library Management System</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ===== HEADER ===== -->
+  <header class="site-header">
+    <div class="header-brand">
+      <span class="header-icon" aria-hidden="true">📚</span>
+      <h1>Library Management System</h1>
+    </div>
+    <p class="header-tagline">A client-side educational prototype</p>
+  </header>
+
+  <!-- ===== NAVIGATION ===== -->
+  <nav class="main-nav" aria-label="Primary navigation">
+    <ul class="nav-list">
+      <li><a href="#dashboard" class="nav-link active" data-section="dashboard">Dashboard</a></li>
+      <li><a href="#catalogue" class="nav-link" data-section="catalogue">Catalogue</a></li>
+      <li><a href="#add-book" class="nav-link" data-section="add-book">Add Book</a></li>
+      <li><a href="#members" class="nav-link" data-section="members">Members</a></li>
+      <li><a href="#borrow-return" class="nav-link" data-section="borrow-return">Borrow / Return</a></li>
+    </ul>
+  </nav>
+
+  <main class="content-area">
+
+    <!-- ===== DASHBOARD SECTION ===== -->
+    <section id="dashboard" class="page-section active-section">
+      <h2 class="section-title">Dashboard</h2>
+      <div class="stats-grid">
+        <article class="stat-card" id="stat-total-books">
+          <span class="stat-icon" aria-hidden="true">📖</span>
+          <div class="stat-info">
+            <span class="stat-number" id="totalBooksCount">0</span>
+            <span class="stat-label">Total Books</span>
+          </div>
+        </article>
+        <article class="stat-card" id="stat-available">
+          <span class="stat-icon" aria-hidden="true">✅</span>
+          <div class="stat-info">
+            <span class="stat-number" id="availableBooksCount">0</span>
+            <span class="stat-label">Available</span>
+          </div>
+        </article>
+        <article class="stat-card" id="stat-borrowed">
+          <span class="stat-icon" aria-hidden="true">📤</span>
+          <div class="stat-info">
+            <span class="stat-number" id="borrowedBooksCount">0</span>
+            <span class="stat-label">Borrowed</span>
+          </div>
+        </article>
+        <article class="stat-card" id="stat-members">
+          <span class="stat-icon" aria-hidden="true">👥</span>
+          <div class="stat-info">
+            <span class="stat-number" id="totalMembersCount">0</span>
+            <span class="stat-label">Members</span>
+          </div>
+        </article>
+      </div>
+
+      <!-- Recent activity log -->
+      <div class="activity-log">
+        <h3>Recent Activity</h3>
+        <ul id="activityList" class="activity-list">
+          <!-- Filled by JavaScript -->
+        </ul>
+        <p id="noActivityMsg" class="empty-state">No activity recorded yet.</p>
+      </div>
+    </section>
+
+    <!-- ===== CATALOGUE SECTION ===== -->
+    <section id="catalogue" class="page-section">
+      <h2 class="section-title">Book Catalogue</h2>
+
+      <!-- Search & Filter controls -->
+      <div class="catalogue-controls">
+        <div class="search-group">
+          <label for="searchInput" class="sr-only">Search books by title or author</label>
+          <input
+            type="search"
+            id="searchInput"
+            class="search-input"
+            placeholder="Search by title or author…"
+            autocomplete="off"
+          />
+        </div>
+        <div class="filter-group">
+          <label for="categoryFilter" class="sr-only">Filter by category</label>
+          <select id="categoryFilter" class="category-select">
+            <option value="all">All Categories</option>
+            <!-- Options populated by JavaScript -->
+          </select>
+        </div>
+      </div>
+
+      <!-- Book listing -->
+      <div id="bookList" class="book-grid">
+        <!-- Book cards rendered by JavaScript -->
+      </div>
+      <p id="noBooksMsg" class="empty-state" hidden>No books match your search.</p>
+    </section>
+
+    <!-- ===== ADD BOOK SECTION ===== -->
+    <section id="add-book" class="page-section">
+      <h2 class="section-title">Add a New Book</h2>
+      <form id="addBookForm" class="form-card" novalidate>
+        <div class="form-group">
+          <label for="bookTitle">Title <span class="required">*</span></label>
+          <input type="text" id="bookTitle" required placeholder="e.g. The Great Gatsby" />
+        </div>
+        <div class="form-group">
+          <label for="bookAuthor">Author <span class="required">*</span></label>
+          <input type="text" id="bookAuthor" required placeholder="e.g. F. Scott Fitzgerald" />
+        </div>
+        <div class="form-group">
+          <label for="bookCategory">Category <span class="required">*</span></label>
+          <input type="text" id="bookCategory" required placeholder="e.g. Fiction" />
+        </div>
+        <div class="form-group">
+          <label for="bookISBN">ISBN (optional)</label>
+          <input type="text" id="bookISBN" placeholder="e.g. 978-0-7432-7356-5" />
+        </div>
+        <button type="submit" class="btn btn-primary" id="addBookBtn">Add Book</button>
+        <p id="addBookMsg" class="form-message" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+
+    <!-- ===== MEMBERS SECTION ===== -->
+    <section id="members" class="page-section">
+      <h2 class="section-title">Member Registration</h2>
+      <form id="registerMemberForm" class="form-card" novalidate>
+        <div class="form-group">
+          <label for="memberName">Full Name <span class="required">*</span></label>
+          <input type="text" id="memberName" required placeholder="e.g. Jane Smith" />
+        </div>
+        <div class="form-group">
+          <label for="memberEmail">Email <span class="required">*</span></label>
+          <input type="email" id="memberEmail" required placeholder="e.g. jane@example.com" />
+        </div>
+        <div class="form-group">
+          <label for="memberPhone">Phone (optional)</label>
+          <input type="tel" id="memberPhone" placeholder="e.g. 9876543210" />
+        </div>
+        <button type="submit" class="btn btn-primary" id="registerMemberBtn">Register Member</button>
+        <p id="registerMemberMsg" class="form-message" role="status" aria-live="polite"></p>
+      </form>
+
+      <!-- Existing members list -->
+      <div class="members-list-wrapper">
+        <h3>Registered Members</h3>
+        <ul id="membersList" class="members-list">
+          <!-- Filled by JavaScript -->
+        </ul>
+        <p id="noMembersMsg" class="empty-state">No members registered yet.</p>
+      </div>
+    </section>
+
+    <!-- ===== BORROW / RETURN SECTION ===== -->
+    <section id="borrow-return" class="page-section">
+      <h2 class="section-title">Borrow &amp; Return Books</h2>
+
+      <div class="borrow-return-grid">
+        <!-- Borrow form -->
+        <form id="borrowForm" class="form-card" novalidate>
+          <h3>Borrow a Book</h3>
+          <div class="form-group">
+            <label for="borrowBookSelect">Select Book <span class="required">*</span></label>
+            <select id="borrowBookSelect" required>
+              <option value="">— Choose an available book —</option>
+              <!-- Options populated by JavaScript -->
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="borrowMemberSelect">Select Member <span class="required">*</span></label>
+            <select id="borrowMemberSelect" required>
+              <option value="">— Choose a member —</option>
+              <!-- Options populated by JavaScript -->
+            </select>
+          </div>
+          <button type="submit" class="btn btn-borrow" id="borrowBtn">Borrow Book</button>
+          <p id="borrowMsg" class="form-message" role="status" aria-live="polite"></p>
+        </form>
+
+        <!-- Return form -->
+        <form id="returnForm" class="form-card" novalidate>
+          <h3>Return a Book</h3>
+          <div class="form-group">
+            <label for="returnBookSelect">Select Book <span class="required">*</span></label>
+            <select id="returnBookSelect" required>
+              <option value="">— Choose a borrowed book —</option>
+              <!-- Options populated by JavaScript -->
+            </select>
+          </div>
+          <button type="submit" class="btn btn-return" id="returnBtn">Return Book</button>
+          <p id="returnMsg" class="form-message" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+
+      <!-- Borrow records table -->
+      <div class="records-wrapper">
+        <h3>Borrowing Records</h3>
+        <div class="table-responsive">
+          <table class="records-table" id="recordsTable">
+            <thead>
+              <tr>
+                <th scope="col">Book</th>
+                <th scope="col">Member</th>
+                <th scope="col">Borrowed On</th>
+                <th scope="col">Status</th>
+              </tr>
+            </thead>
+            <tbody id="recordsBody">
+              <!-- Filled by JavaScript -->
+            </tbody>
+          </table>
+        </div>
+        <p id="noRecordsMsg" class="empty-state">No borrowing records yet.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="site-footer">
+    <p>&copy; 2026 Library Management System &mdash; Software Engineering Lab 6</p>
+  </footer>
+
+  <!-- ===== TOAST NOTIFICATION ===== -->
+  <div id="toast" class="toast" role="alert" aria-live="assertive" hidden></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
